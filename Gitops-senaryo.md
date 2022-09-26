@@ -63,11 +63,7 @@ Uygulamaları dağıtabilmemizi sağlayan Argo CD aracını clusterımıza yükl
 
 `kubectl get all -n argocd` komutu ile Argoocd namespace'inde oluşturulan objeleri listeleyelim.
 
-Varsayılan olarak Argo CD API sunucusu harici bir IP ile ile expose edilmez. Bunun için argocd-server servis tipini LoadBalancer olarak değiştirelim.
-
-`kubectl patch svc argocd-server -n argocd -p '{"spec": {"type": "LoadBalancer"}}' `  
-
-Ayrıca port-forwarding de API server'a bağlanmak için kullanılabilir. Aşağıdaki komut ile port-forwarding sağlanır.
+Varsayılan olarak Argo CD API sunucusu harici bir IP ile ile expose edilmez. Bunun için port-forwarding ile API Server'a bağlanacağız.
 
 `kubectl port-forward svc/argocd-server -n argocd 8080:443`
 
