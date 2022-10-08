@@ -3,7 +3,8 @@ title: Gitops
 --- 
 
 # GitOps ve Argo CD
-## Selamlar, GitOps prensibi ve ArgoCD aracı hakkında öğrenim senaryosudur. 
+## Selamlar, GitOps prensibi ve bir GitOps aracı olan ArgoCD  hakkında öğrenim senaryosudur. 
+
 ###  Seviye: Başlangıç
 
 ## Neden GitOps?
@@ -97,7 +98,8 @@ Son durumda Appliation bilgileri aşağıdaki gibidir:
 
 + application name : `demo`
 + project: `default`
-+ repository URL: `https://github.com/codefresh-contrib/gitops-certification-examples`
++ sync policy: `manuel`
++ repository URL: `https://github.com/aycakcayy/gitops-certification-examples`
 + path: `./simple-app`
 + Cluster: `https://kubernetes.default.svc` 
 + namespace: `default`
@@ -110,8 +112,8 @@ Argo CD bizlere uygulamamızı otomatik veya manuel şekilde sync etme seçeneğ
 
 Uygulama şuanda OutOfSync durumundadır. Bunun anlamı;
 
-+ Cluster boş
-+ Git reposunda bir uygulama var
++ Cluster boş,
++ Git reposunda bir uygulama var,
 + Bu nedenle Git durumu ve cluster durumu farklıdır. Git reposu ve cluster sync durumda değildir. (OutOfSync)
 
 Ayrıca CLI’da aşağıdaki komutu çalıştırarak herhangi bir deployment oluşmadığını da görebiliriz.
@@ -134,6 +136,105 @@ replicaset, endpoint, pod objelerini görüntüleyebiliyoruz. Uçtan uca görsel
 ![argo_create_app6](./img5.png)
 
 Arayüz üzerinden “delete” butonuna basarak uygulamayı silip, demo çalışmasını bitirebiliriz. 
+
+
+## Senaryo 3
+
++ Senkronizasyon Stratejileri
+
+Senaryoda sırasında şunları öğreneceksiniz:
+
++ AutoSync nedir ve nasıl kullanılır?
++ SelfHeal nedir ve nasıl kullanılır?
++ AutoPrune nedir ve nasıl kullanılır?
+
+Bu senaryoda Argo CD'nin senkronizasyon stratejileri ile ilgili bir demo gerçekleştireceğiz. Öncelikle yine aynı REPO URL'i üzerinden ./sync-strategies path'i altındaki uygulmamaızı Argo CD üzerine deploy edelim.
+
+Bunun için Argo CD arayüzünde "new app" diyerek açılan pencere üzerinde uygulama bilgilerini aşağıdaki şekilde dolduralım.
+
++ application name : `demo`
++ project: `default`
++ sync policy: `automotic`
++ repository URL: `https://github.com/aycakcayy/gitops-certification-examples`
++ path: `./sync-strategies`
++ Cluster: `https://kubernetes.default.svc` 
++ namespace: `default`
+
+Diğer parametreleri boş bırakarak Create butonuna tıkladığımızda demo uygulamamız aşağıdaki şekilde oluşur.
+
+![argo_create_app9](./img9.png)
+
+Senkronizasyon stratejisini otomatik olarak seçtiğimiz için, Argo CD, uygulamayı hemen otomatik olarak deploy etti.(çünkü cluster durumu, repo durumuyla aynı değildi ve otomatik olarak hemen senkronize oldu)
+
+`kubectl get deployments` diyerek oluşan uygulamayı da CLI üzerinden kontrol edebiliriz.
+
+![argo_create_app9](./img11.png)
+
++ AutoSync ile yeni versiyonu deploy edelim!
+
+Uygulamamızın başka bir versiyonunu deploy etmek istiyoruz. Git'i değiştireceğiz ve Argo CD'nin değişikliği nasıl algıladığını ve otomatik olarak dağıttığını göreceğiz (senkronizasyon stratejisini otomatik olarak ayarladığımız için)
+
+Git repomuz üzerindeki sync-strategies/deployment.yml dosyasında 18.satırdaki versiyon bilgisini `v1.0`'den  `v2.0` olacak şekilde güncelliyoruz.
+
+![argo_create_app10](./img10.png)
+
+Normalde Argo CD, Git ile cluster arasındaki durumu her 3 dakikada bir default olarak kontrol eder. İşleri hızlandırmak için Argo CD arayüzündeki uygulamaya manuel olarak tıklamalı ve "Refresh" butonuna basmalısınız.
+
+Uygulamanın arayüzüne giderek, uygulama versiyonunun artık V2 olduğunun görebiliriz.
+
+![argo_create_app12](./img12.png)
+
++ SelfHeal Stratejisi
+
+Autosync, Git reposu değişir değişmez uygulamanızı otomatik olarak dağıtır. Ancak biri cluster durumunda manuel bir değişiklik yaparsa, Argo CD varsayılan olarak hiçbir şey yapmaz (uygulamayı yine de senkronizasyon dışı-outofsync- olarak işaretler).
+
+Argo CD'ye clusterda manuel olarak yapılan değişiklikleri atmasını söylemek için "SelfHeal" seçeneğini etkinleştirebilirsiniz. Bu, deployment ortamınızı dışardan manuel olarak müdahele edilemez hale getirir. Daha önce de değindiğimiz gibi; deployment için tek gerçek kaynak Git reponuzdur. 
+
+Örneğin CLI üzerinde aşağıdaki komutu çalıştırın. `kubectl scale --replicas=3 deployment simple-deployment` Bu şekilde manuel olarak cluster üzerinde değişiklik yaptınız.
+
+![argo_create_app10](./img13.png)
+
+Şimdi Argo CD arayüzüne gidin ve uygulamaya tıklayın. Uygulama ekranında sol üstteki "App Details" kısmına geçin.
+
+"Sync Policy" kısmında yer alan "Self Heal" seçeneğini enable durumuna geçirin. Onay iletişim kutusuna tamam yanıtını verin.
+
+![argo_create_app10](./img14.png)
+
+Artık uygulamadaki manuel yapılan değişikler devredışı bırakılır ve replica sayısı da 1'e döner. (Git reposunda belirtilen şekilde.)
+
+Artık kümedeki herhangi bir şeyi değiştirmeyi deneyebilirsiniz ve tüm değişiklikler her zaman atılır (Git'in parçası olmadıkları için)
+
+CLI üzerinde tekrardan `kubectl scale --replicas=3 deployment simple-deployment` diyerek replica sayısını 3'e çekelim. Ardından hemen `kubectl get deployment simple-deployment` dediğimizde uygulamanın tek podu olduğunu göreceğiz.
+
+Uygulamanız her zaman dağıtılmış 1 pod'a sahip olacaktır. Git durumu bunu söylüyor ve bu nedenle Argo CD otomatik olarak küme durumunu aynı hale getiriyor ve manuel değişiklikleri devre dışı bırakıyor olacak.
+
++ AutoPrune Stratejisi
+
+AutoSync ve AutoHeal etkinleştirdikten sonra bile, Git'te kaynakları kaldırırsanız, Argo CD kaynakları clusterdan yine de silmez.
+
+Bu davranışı etkinleştirmek için AutoPrune seçeneğini etkinleştirmeniz gerekir.
+
+İlk olarak Git reposunda sync-strategies/deployment.yml dizinine giderek bu deployment dosyasını silin ve commit edin.
+
+![argo_create_app10](./img15.png)
+
+Ardından ArgoCD arayüzünde "Refresh" butonuna tıklayın. ArgoCD, değişikliği algılayacak ve uygulamayı "OutOfSync" olarak işaretleyecektir. Ancak deployment hala orada olacak.
+
+![argo_create_app10](./img16.png)
+
+Şimdi bu durumu düzeltmek için, Argo CD dashboarda gidelim. Uygulamanın içine girip "App details" kısmından "Prune resources" seçeneğini enable hale getirelim. Enable butonuna tıklayıp, onaylayalım.
+
+![argo_create_app10](./img17.png)
+
+Ayarlar kısmını kapatıp uygulamayı "refresh" ettiğimizde deployment artık cluster üzerinden kaldırılacak.
+
+![argo_create_app10](./img18.png)
+
+CLI üzerinde komut ile de kontrol ettiğimizde `kubectl get deployment` artık deployment cluster üzerinden kaldırılmış durumdadır.
+
+![argo_create_app10](./img19.png)
+
+Tebrikler, tüm adımları tamamladınız! Demo uygulamasını silip, senaryoyu bitirebilirsiniz.
 
 
 
