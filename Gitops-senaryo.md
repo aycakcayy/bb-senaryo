@@ -64,21 +64,31 @@ Uygulamaları dağıtabilmemizi sağlayan Argo CD aracını clusterımıza yükl
 
 `kubectl get all -n argocd` komutu ile Argoocd namespace'inde oluşturulan objeleri listeleyelim.
 
-Varsayılan olarak Argo CD API sunucusu harici bir IP ile ile expose edilmez. Bunun için port-forwarding ile API Server'a bağlanacağız.
+ArgoCD namespace'inde oluşturulan pod'ların hepsi Running durumunda olmalıdır. Eğer pod'ların hepsi Running durumunda değilse;
+`kubectl get pods -n argocd` komutunu çalıştırarak durumunu kontrol edebiliriz. Bütün pod'ların Running durumunda oluncaya kadar bekleyelim...
+Varsayılan olarak Argo CD API sunucusu harici bir IP ile ile expose edilmez. Bunun için aşağıdaki komut ile argocd-server'ı Loadbalancer tipinde bir servise dönüştürelim.
 
-`kubectl port-forward svc/argocd-server -n argocd 8080:443`
+`kubectl patch svc argocd-server -n argocd -p '{"spec": {"type": "LoadBalancer"}}'`
 
-Artık API Server'a https://localhost:8080 üzerinden erişilebilir. Gidip ArgoCD arayüzü ile tanışma zamanı!
+Şimdi ise ArgoCD uygulamasının hangi portta çalıştığını öğrenelim. 
 
-Admin hesabının ilk parolası otomatik olarak oluşturulur ve Argo CD kurulum ad alanınızda argocd-initial-admin-secret adlı bir gizli alan parolasında açık metin olarak saklanır. Bu şifreyi kubectl kullanarak kolayca alabilirsiniz. Başka bir terminal tab'ı içerisinde aşağıdaki komutu çalıştırın.
+`kubectl get svc --all-namespaces -o go-template='{{range .items}}{{range.spec.ports}}{{if .nodePort}}{{.nodePort}}{{"\n"}}{{end}}{{end}}{{end}}'`
+
+Elde ettiğimiz port bilgisi ile, yukarıdaki port kısmına girerek ve sonrasında çalıştığımız node'u seçerek Argo CD arayüzüne ulaşabiliriz.
+
+Argo CD arayüzüne girdikten sonra, giriş bilgilerine ihtiyacımız olacak. 
+
+Admin hesabının ilk parolası otomatik olarak oluşturulur ve argocd-initial-admin-secret adlı bir gizli alan parolasında açık metin olarak saklanır. Bu şifreyi kubectl kullanarak kolayca alabilirsiniz. Aşağıdaki komut ile admin kullanıcısına ait password bilgisine ulaşabiliriz.
 
 `kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d; echo`
 
-Artık kullanıcı admin olan Argocd hesabının password bilgisine sahipsiniz. Bu bilgiler ile https://localhost:8080 adresinden ArgoCD'ye giriş sağlayabilirsiniz.
+Artık kullanıcı admin olan Argocd hesabının password bilgisine sahipsiniz. Bu bilgiler ile arayüz üzerinden ArgoCD'ye giriş sağlayabilirsiniz.
 
 Bizleri aşağıdaki gibi bir Argo CD arayüzü karşılıyor olacak!
 
 ![argo_homepage](./screenpage.png)
+
+Tebrikler, ilk aşamayı tamamladınız. Argo CD ortamınız hazır!
 
 ## Senaryo 2
 
