@@ -21,7 +21,7 @@ Genel bir tanımla; GitOps, versiyon kontrol, işbirliği, uyumluluk ve CI/CD ar
 
 ![what_is_argo](./img8.png)
 
-Argo CD; Kubernetes için bildirime dayalı, GitOps metodolojisini izleyen bir sürekli teslim aracıdır.
+Argo CD; Kubernetes için bildirime dayalı, GitOps metodolojisini izleyen bir sürekli teslim -continous delivery- aracıdır.
 
 “Uygulama tanımları, konfigürasyonları ve ortamları bildirime dayalı ve versiyon kontrollü olmalıdır” mantığı ile çalışır. Uygulama dağıtımı ve yaşam döngüsü yönetiminin otomatikleştirilmiş, denetlenebilir ve anlaşılabilir olmasını sağlar.
 
@@ -33,19 +33,18 @@ Argo CD belirli periyotlarda Kubernetes’e deploy edilmiş uygulamaları izler 
 
 ## Neden Argo CD ?
 
-+ Kubernetes cluster'ınızı görselleştirir. Yani bir deployment inizi replica set,pod vb.kuberetes objeleri şeklinde görselleştiriyor.
-+ Helm, customize, yaml tanım dosyalarını destekliyor.
++ Kubernetes cluster'ınızı görselleştirir. Yani bir deployment inizi replica set,pod vb. kubernetes objeleri şeklinde görselleştiriyor.
++ Helm, customize, yaml gibi tanım dosyalarını destekliyor.
 + Birden fazla kubernetes cluster ile entegre edilebiliyor.
 + İmperative bir şekilde kubectl kullanmıyorsunuz, yapınızı declarative yapıyorsunuz yani yaptığınız değişikliği Argo CD algılayıp Kubernetes’e yüklenmesini sağlıyor.
 + Kubernetes cluster'ınızda bir deployment silindi veya bir kesinti yaşadınız; Argo CD hem git reposu hem Kubernetes'i sürekli monitor ettiğinden ikisi arasında fark olduğunu anlayıp silinen deployment'ı tekrar yerine getirebiliyor.
++ Özetle; deployment süreçlerimizi iyileştirmek adına ArgoCD aracını kullanıyoruz.
 
 ## Öğrenme Hedefleri
 
 GitOps senaryosunu tamamladıktan sonra;
 
-+ GitOps prensibinin ne olduğu,
-+ ArgoCD aracının ne işe yaradığıu ve nasıl kurulduğu hakkında bilgi sahibi olacaksınız.
-
++ GitOps prensibi ve ArgoCD aracı hakkında bilgi sahibi olacaksınız. Ayrıca ArgoCD aracının özelliklerini deneyimleyerek öğreneceksiniz.
 ## Ön gereksinimler
 
 + Linux dağıtımlarından en az birine aşina olmalı ve kullanabiliyor olmalısınız.
@@ -54,7 +53,7 @@ GitOps senaryosunu tamamladıktan sonra;
 
 ## Senaryo 1
 
-+ Argo CD Kurulumu
++ <b>Argo CD Kurulumu</b>
 
 Uygulamaları dağıtabilmemizi sağlayan Argo CD aracını clusterımıza yükleyelim. Halihazırda Kubernetes kurulu ortamımızda aşağıdaki adımları izleyerek Argo CD kurabiliriz.
 
@@ -92,11 +91,11 @@ Tebrikler, ilk aşamayı tamamladınız. Argo CD ortamınız hazır!
 
 ## Senaryo 2
 
-+ Argo CD Üzerinde Uygulama Oluşturma
++ <b>Argo CD Üzerinde Uygulama Oluşturma</b>
 
-Merhabalar, Kubernetes ortamı üzerinde Argo CD kurulumumuzu tamamladığımıza göre artık ilk Argo CD uygulamamızı deploy edebiliriz.
+Kubernetes ortamı üzerinde Argo CD kurulumumuzu tamamladığımıza göre artık ilk Argo CD uygulamamızı deploy edebiliriz.
 
-Argo CD arayüzü üzerinde bir uygulama oluşturmak için "+New App" butonuna tıklanır. Açılan pencere üzerinden uygulama bilgileri doldurulur. Bu örnekte Codefresh'in örnek reposundaki bir uygulamayı deploy edeceğiz. 
+Argo CD arayüzü üzerinde bir uygulama oluşturmak için "+New App" butonuna tıklanır. Açılan pencere üzerinden uygulama bilgileri doldurulur. Bu örnekte https://github.com/aycakcayy/gitops-certification-examples örnek reposundaki bir uygulamayı deploy edeceğiz. Sizler de bu repoyu fork edip, onun üzerinden de ilerleyebilirsiniz. 
 
 Aşağıda açılan pencere üzerinde uygulama bilgilerini girelim:
 
@@ -150,7 +149,7 @@ Arayüz üzerinden “delete” butonuna basarak uygulamayı silip, demo çalı�
 
 ## Senaryo 3
 
-+ Senkronizasyon Stratejileri
++ <b>ArgoCD Senkronizasyon Stratejileri</b>
 
 Senaryoda sırasında şunları öğreneceksiniz:
 
@@ -158,7 +157,7 @@ Senaryoda sırasında şunları öğreneceksiniz:
 + SelfHeal nedir ve nasıl kullanılır?
 + AutoPrune nedir ve nasıl kullanılır?
 
-Bu senaryoda Argo CD'nin senkronizasyon stratejileri ile ilgili bir demo gerçekleştireceğiz. Öncelikle yine aynı REPO URL'i üzerinden ./sync-strategies path'i altındaki uygulmamaızı Argo CD üzerine deploy edelim.
+Bu senaryoda Argo CD'nin senkronizasyon stratejileri ile ilgili bir demo gerçekleştireceğiz. Öncelikle yine aynı REPO URL'i üzerinden(https://github.com/aycakcayy/gitops-certification-examples) ./sync-strategies path'i altındaki uygulamamızı Argo CD üzerine deploy edelim.
 
 Bunun için Argo CD arayüzünde "new app" diyerek açılan pencere üzerinde uygulama bilgilerini aşağıdaki şekilde dolduralım.
 
@@ -180,7 +179,7 @@ Senkronizasyon stratejisini otomatik olarak seçtiğimiz için, Argo CD, uygulam
 
 ![argo_create_app9](./img11.png)
 
-+ AutoSync ile yeni versiyonu deploy edelim!
++ Şimdi AutoSync ile uygulamamızın yeni versiyonunu deploy edelim!
 
 Uygulamamızın başka bir versiyonunu deploy etmek istiyoruz. Git'i değiştireceğiz ve Argo CD'nin değişikliği nasıl algıladığını ve otomatik olarak dağıttığını göreceğiz (senkronizasyon stratejisini otomatik olarak ayarladığımız için)
 
@@ -246,11 +245,71 @@ CLI üzerinde komut ile de kontrol ettiğimizde `kubectl get deployment` artık 
 
 Tebrikler, tüm adımları tamamladınız! Demo uygulamasını silip, senaryoyu bitirebilirsiniz.
 
+## Senaryo 4
 
++ <b>ArgoCD App of Apps Pattern</b>
 
+Tek bir uygulamanın nasıl devreye alındığını önceki senaryolarda deneyimledik. Şimdi sırada, aynı anda birden fazla ilgili uygulamayı devreye almak var!
+Tahmin edebileceğiniz gibi her uygulama için yeni bir manifest oluşturmak ve bunları tek tek yönetmek oldukça zor. Bu sebeple ArgoCD çoklu uygulama yönetimi için bize bazı çözüm yolları sunar.
+Argo CD'de birden fazla uygulamayı yönetmenin 2 yolu vardır.
++ App of Apps
++ ApplicationSets
 
+Bu senaryoda App of Apss pattern'i inceleyeceğiz. Ve şunları öğreneceğiz:
 
++ App of Apps modeli nedir ve hangi sorunları çözer?
++ App of Apps'ı ne zaman kullanmalıyız?
++ App of Apps modelini nasıl kullanırız?
 
+Argo CD, uygulama kaynaklarının bir Kubernetes kümesine dağıtılmasını ve senkronize olmasını sağlamaktan sorumlu bir uygulama kaynağı tanımlamanıza olanak tanır.
+Bir uygulama, uygulamanızın Kubernetes'te çalışmasına izin veren tüm tanımlarınız olan manifestoların depolandığı git reposu ve klasörü tanımlar. Ya birden fazla uygulama dağıtmamız gerekirse? Bu manifestoları nasıl ele alacağız? Dağıtılan her uygulama için bir uygulama tanımı(manifestosu) oluşturmamız gerekiyor, ancak bu uygulamalar bir grup ilgili uygulama olduğunda, Argo CD'nin bunu bilmesi ile işler kolaylaşılıyor. 
 
+<b>Benzer uygulamaları gruplama</b>
 
+Argo topluluğu, App of Apps modeliyle yukarıdaki sorularımıza bir çözüm buldu. Temel olarak, bu model, birden fazla alt uygulamayı kendisi tanımlayacak ve senkronize edecek bir root Argo CD uygulaması tanımlamamıza izin verir.
+Root uygulama, daha önce yaptığımız gibi bir uygulama manifestosuna işaret etmek yerine Git'te oluşturmak ve dağıtmak istediğimiz her uygulamayı tanımlayan manifestoları sakladığımız bir klasöre işaret eder. Bu şekilde, tüm uygulamalarınızı tek bir YAML manifestosu içinde belirtebilirsiniz.
+
+![appofappps](./appofapps.png)
+
+Bu senaryoda demolarımızı https://github.com/aycakcayy/gitops-cert-level-2-examples reposundan gerçekleştireceğiz. Sizde bu repoyu fork edip, çalıştırabilirsiniz.
+
+App-of-apps klasörünün altındaki my-app-list dizinine giderseniz(https://github.com/aycakcayy/gitops-cert-level-2-examples/tree/main/app-of-apps/my-app-list) burada Argo Application CRD'yi kullanarak 7 uygulama tanımlandığını göreceksiniz.
+
+![appofappps4](./appofapps4.png)
+
+Tüm bu uygulamaları clustera dağıtmak istiyoruz. Normalde uygulamaları tek tek dağıtmanız gerekir ve bu zaman alan, manuel bir süreçtir.Ancak Argo CD, App of Apps Pattern'i ile bu manuel süreci otomatize bir hale getirebiliyoruz. Bu pattern, daha önce de açıkladığımız gibi tüm diğer uygulamalara işaret eden bir Argo CD uygulaması oluşturabileceğiniz anlamına gelir.
+
+Aşağıdaki bilgilere sahip bir uygulama yaratalım. Uygulama yaratma işlemi için "Argo CD ile uygulama oluşturma" senaryosuna gidebilirsiniz.
+
++ application name : `app-of-apps-demo`
++ project: `default`
++ SYNC POLICY: `manual`
++ repository URL: `https://github.com/aycakcayy/gitops-cert-level-2-examples`
++ path: `./app-of-apps/my-app-list`
++ Cluster: `https://kubernetes.default.svc` 
++ Namespace: `argocd`
+
+Create deriz ve uygulamamız aşağıdaki şekilde oluşur.
+
+![appofappps5](./appofapps5.png)
+
+Sync policy manuel olarak seçildiği için, uygulamayı manuel olarak senkronize edelim. Ve diğer tüm child uygulamalar, root uygulama olan app-of-apps-demo uygulamasına bağlı bir şekilde deploy oldular.
+
+![appofappps6](./appofapps6.png)
+
+App of apps pattern'i ile 7 uygulamayı tek adımda deploy etmiş olduk.
+
+<b>App of Apps Kullanım Alanları</b>
+
+App of Apps kullanmanın temel avantajı, birkaç uygulamayı tek bir birim olarak ele alırken aynı zamanda bunları dağıtım sırasında izole halde tutabilmenizdir. 
+
+Her Argo CD uygulaması, yönettiği tüm Kubernetes bileşenlerini izler. Benzer şekilde de, her root uygulama tüm child uygulama tanımlarını izler. Sağlıklarını izler ve herhangi bir tutarsızlığı tespit eder. Eğer isterseniz, senkronize de eder(outoSync, selfHeal etkin durumdayken).
+
+Eğer child uygulamalardan birini silerseniz, Argo CD'nin ana uygulamayı tıpkı normal bir uygulama gibi "OutOfSync" olarak işaretlediğini görebilirsiniz.
+
+Örneğin argo-rollouts uygulamasını silelim. Sonrasında root uygulamanın kendini outofsync olarak işaretlediğini göreceğiz.
+
+![appofappps7](./appofapps7.png)
+
+Tebrikler, senaryoyu tamamladınız! 
 
