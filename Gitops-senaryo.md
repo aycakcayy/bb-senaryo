@@ -95,7 +95,7 @@ Tebrikler, ilk aşamayı tamamladınız. Argo CD ortamınız hazır!
 
 Kubernetes ortamı üzerinde Argo CD kurulumumuzu tamamladığımıza göre artık ilk Argo CD uygulamamızı deploy edebiliriz.
 
-Argo CD arayüzü üzerinde bir uygulama oluşturmak için "+New App" butonuna tıklanır. Açılan pencere üzerinden uygulama bilgileri doldurulur. Bu örnekte https://github.com/aycakcayy/gitops-certification-examples örnek reposundaki bir uygulamayı deploy edeceğiz. Sizler de bu repoyu fork edip, onun üzerinden de ilerleyebilirsiniz. 
+Argo CD arayüzü üzerinde bir uygulama oluşturmak için "+New App" butonuna tıklanır. Açılan pencere üzerinden uygulama bilgileri doldurulur. Bu örnekte https://github.com/aycakcayy/gitops-certification-examples örnek reposundaki bir uygulamayı deploy edeceğiz. Sizler de bu repoyu fork edip, onun üzerinden çalışmaya devam edebilirsiniz.
 
 Aşağıda açılan pencere üzerinde uygulama bilgilerini girelim:
 
@@ -157,7 +157,7 @@ Senaryoda sırasında şunları öğreneceksiniz:
 + SelfHeal nedir ve nasıl kullanılır?
 + AutoPrune nedir ve nasıl kullanılır?
 
-Bu senaryoda Argo CD'nin senkronizasyon stratejileri ile ilgili bir demo gerçekleştireceğiz. Öncelikle yine aynı REPO URL'i üzerinden(https://github.com/aycakcayy/gitops-certification-examples) ./sync-strategies path'i altındaki uygulamamızı Argo CD üzerine deploy edelim.
+Bu senaryoda Argo CD'nin senkronizasyon stratejileri ile ilgili bir demo gerçekleştireceğiz. Öncelikle yine aynı REPO URL'i üzerinden(https://github.com/aycakcayy/gitops-certification-examples) ./sync-strategies path'i altındaki uygulamamızı Argo CD üzerine deploy edelim. Sizler de bu repo'yu for ederek, onun üzerinden çalışabilirsiniz.
 
 Bunun için Argo CD arayüzünde "new app" diyerek açılan pencere üzerinde uygulama bilgilerini aşağıdaki şekilde dolduralım.
 
@@ -262,7 +262,7 @@ Bu senaryoda App of Apss pattern'i inceleyeceğiz. Ve şunları öğreneceğiz:
 + App of Apps modelini nasıl kullanırız?
 
 Argo CD, uygulama kaynaklarının bir Kubernetes kümesine dağıtılmasını ve senkronize olmasını sağlamaktan sorumlu bir uygulama kaynağı tanımlamanıza olanak tanır.
-Bir uygulama, uygulamanızın Kubernetes'te çalışmasına izin veren tüm tanımlarınız olan manifestoların depolandığı git reposu ve klasörü tanımlar. Ya birden fazla uygulama dağıtmamız gerekirse? Bu manifestoları nasıl ele alacağız? Dağıtılan her uygulama için bir uygulama tanımı(manifestosu) oluşturmamız gerekiyor, ancak bu uygulamalar bir grup ilgili uygulama olduğunda, Argo CD'nin bunu bilmesi ile işler kolaylaşılıyor. 
+Bir uygulama, uygulamanızın Kubernetes'te çalışmasına izin veren tüm tanımlarınız olan manifestoların depolandığı git reposu ve klasörü tanımlar. Ya birden fazla uygulama dağıtmamız gerekirse? Bu manifestoları nasıl ele alacağız? Dağıtılan her uygulama için bir manifesto oluşturmamız gerekiyor, ancak bu uygulamalar bir grup ilgili uygulama olduğunda, Argo CD'nin bunu bilmesi ile işler kolaylaşılıyor. 
 
 <b>Benzer uygulamaları gruplama</b>
 
@@ -271,7 +271,7 @@ Root uygulama, daha önce yaptığımız gibi bir uygulama manifestosuna işaret
 
 ![appofappps](./appofapps.png)
 
-Bu senaryoda demolarımızı https://github.com/aycakcayy/gitops-cert-level-2-examples reposundan gerçekleştireceğiz. Sizde bu repoyu fork edip, çalıştırabilirsiniz.
+Bu senaryoda demolarımızı https://github.com/aycakcayy/gitops-cert-level-2-examples reposundan gerçekleştireceğiz. Sizde bu repoyu fork edip, senaryoyu onun üzerinden uygulamaya devam edebilirsiniz.
 
 App-of-apps klasörünün altındaki my-app-list dizinine giderseniz(https://github.com/aycakcayy/gitops-cert-level-2-examples/tree/main/app-of-apps/my-app-list) burada Argo Application CRD'yi kullanarak 7 uygulama tanımlandığını göreceksiniz.
 
