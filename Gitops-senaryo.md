@@ -73,7 +73,7 @@ Varsayılan olarak Argo CD API sunucusu harici bir IP ile ile expose edilmez. Bu
 
 `kubectl get svc --all-namespaces -o go-template='{{range .items}}{{range.spec.ports}}{{if .nodePort}}{{.nodePort}}{{"\n"}}{{end}}{{end}}{{end}}'`
 
-Elde ettiğimiz port bilgisi ile, yukarıdaki port kısmına girerek ve sonrasında çalıştığımız node'u seçerek Argo CD arayüzüne ulaşabiliriz.
+Elde ettiğimiz port bilgisi ile, yukarıdaki 2.icon'dan port kısmına girerek ve sonrasında çalıştığımız node'u seçerek Argo CD arayüzüne ulaşabiliriz.
 
 Argo CD arayüzüne girdikten sonra, giriş bilgilerine ihtiyacımız olacak. 
 
@@ -123,7 +123,7 @@ Uygulama şuanda OutOfSync durumundadır. Bunun anlamı;
 
 + Cluster boş,
 + Git reposunda bir uygulama var,
-+ Bu nedenle Git durumu ve cluster durumu farklıdır. Git reposu ve cluster sync durumda değildir. (OutOfSync)
++ Bu nedenle Git durumu ve cluster durumu birbirinden farklıdır. Git reposu ve cluster sync durumda değildir. (OutOfSync)
 
 Ayrıca CLI’da aşağıdaki komutu çalıştırarak herhangi bir deployment oluşmadığını da görebiliriz.
 
@@ -157,7 +157,7 @@ Senaryoda sırasında şunları öğreneceksiniz:
 + SelfHeal nedir ve nasıl kullanılır?
 + AutoPrune nedir ve nasıl kullanılır?
 
-Bu senaryoda Argo CD'nin senkronizasyon stratejileri ile ilgili bir demo gerçekleştireceğiz. Öncelikle yine aynı REPO URL'i üzerinden(https://github.com/aycakcayy/gitops-certification-examples) ./sync-strategies path'i altındaki uygulamamızı Argo CD üzerine deploy edelim. Sizler de bu repo'yu for ederek, onun üzerinden çalışabilirsiniz.
+Bu senaryoda Argo CD'nin senkronizasyon stratejileri ile ilgili bir demo gerçekleştireceğiz. Öncelikle yine aynı REPO URL'i üzerinden(https://github.com/aycakcayy/gitops-certification-examples) ./sync-strategies path'i altındaki uygulamamızı Argo CD üzerine deploy edelim. Sizler de bu repo'yu fork ederek, onun üzerinden değişiklikleri yaparak senaryoyu ilerletmelisiniz.
 
 Bunun için Argo CD arayüzünde "new app" diyerek açılan pencere üzerinde uygulama bilgilerini aşağıdaki şekilde dolduralım.
 
@@ -312,4 +312,99 @@ Eğer child uygulamalardan birini silerseniz, Argo CD'nin ana uygulamayı tıpk�
 ![appofappps7](./appofapps7.png)
 
 Tebrikler, senaryoyu tamamladınız! 
+
+## Senaryo 5
+
++ <b>Helm ile deployment</b>
+
+Bu senaryo sırasında Helm nedir, Helm ile Argocd üzerinde nasıl deployment gerçekleştirebiliriz bunlara değineceğiz.
+
+Helm, en genel tanımıyla bir Kubernetes paket yöneticisidir. Yani Linux için APT, JavaScript yazılımları için NPM ne ise Kubernetes için de Helm’i aynı yere konumlandırabiliriz.
+
+![helm](./helm.png)
+
+Helm, kendini karmaşık deploymentların dahi yönetimini sağlayan ve kolaylaştıran bir teknoloji olarak tanımlıyor. Burada ki karmaşık deplotmentdan kasıt uygulamaların karmaşıklığı değildir, uygulama için gerekli olan Kubernetes kaynak ve bağımlılığının fazlalığıdır. Yani bir uygulamanın Deployment, Service, HPA, Secret, ConfigMap,Route,ServiceAccount gibi bir çok Kubernetes kaynağına sahip olmasıdır. Bu kadar çok kaynağa sahip olması durumunda bunları yönetmek de zorlaşacaktır. Helm bu complexcity içinde bizlere tekil olarak merkezi bir şekilde bu kaynakları yönetme imkanı sunuyor.
+
+Bu karmaşıklığı yönetmenin yanında, kolay güncellenebilirlik, paylaşılabilirlik ve rollback de sağlar.
+
+Bunu nasıl yaptığıyla ilgili detayları, Helm teknolojinin derinliklerini öğrenmek için platformdaki Helm kursu üzerinden öğrenebilirsiniz.
+
+ArgoCD native Helm desteği sunan bir uygulamadır. Yani sizler bir Helm paketini ArgoCD aracılığı ile deploy edebilirsiniz ve ArgoCD yeni versiyonları için bu paketi gözlüyor olur. 
+
+Sık kullanınan helm komutları şu şekildedir:
+
++ Yeni bir paket indirmek için:
+
+`helm install release_name and name_of_chart_you_want_to_install`
+
+Chart kurulumu, uygulamanın Kubernetes dağıtımını ve objelerin oluşturulmasını gerçekleştirir. Chart, esasen bir dizi Kubernetes kaynağını açıklamak için kullanılan bir dosya koleksiyonudur ve bu kaynakların oluşturulmasını Helm yönetir.
+
++ To confirm the deployment and view the currently deployed release:
+
+`helm list` ya da `helm ls`
+
++ Upgarde etmek için:
+
+`helm upgrade release_name chart_name`
+
+Bu ve benzeri helm komutları için HELM senaryosunu detaylıca incelemeniz önerilir.
+
+Argo CD'nin Helm için native destek sağladığından bahsettik, yani paketlenmiş bir Helm chart doğrudan Argo CD tarafından, yeni sürümler için izlenir. Bu gerçekleştiğinde ise Helmchart artık Helmchart olarak işlev görmez ve bunun yerine Argo CD applicationlar kullanılarak ilerler.
+
+Şimdi Argocd ortamı kurup, Helm ile bir uygulama deploy edelim!
+
++ Senaryo 1 Tekrar
+
+Bu senaryo için aşağıdaki repoda yer alan uygulamayı deploy edeceğiz. Sizlerde repoda yer alan application'ı fork ederek, veya direkt bu repo'yu kullanarak senaryoyu ilerletebilirsiniz.
+
+https://github.com/aycakcayy/gitops-certification-examples/tree/main/helm-app
+
+Kaynak repo'muz bu olacak şekilde bir application create edelim. Bunun için Argocd arayüzünde girilmesi gereken bilgiler aşağıdaki gibidir.
+
++ application name : `helm-gitops-example`
++ project: `default`
++ sync policy: `automotic`
++ repository URL: `https://github.com/aycakcayy/gitops-cert-level-2-examples`
++ path: `./helm-app`
++ Cluster: `https://kubernetes.default.svc` 
++ namespace: `default`
+
+Sonrasında create butonuna bastığımızda ilk Helm app'ini Argocd ile deploy etmiş olduk!
+
+![helm-app](./helm-app.png)
+
+`kubectl get deployment` diyerek CLI'da da deployment objesini kontrol edebilirsiniz.
+
+Peki şimdi CLI'da aynı zamanda bir `Helm list` komutunu bastığımızda, bir Helm release görebilir miyiz? Hayır.
+
+Az öncede bahsettiğimiz gibi, Argocd tarafından deploy edilen bir Helmchart artık direkt bir Helm deployment olarak karşımıza çıkmıyor. Bunun nedeni, ArgoCD'nin Helm payload bilgilerini içermemesidir. Bir Helm uygulamasını dağıtırken, Argo CD "helm template" çalıştırır ve ortaya çıkan bildirimleri dağıtır.
+
+Kullanışlı bi UI sunan ArgoCD için, birçok şey CLI üzerinden de kontrol edilebilir. Sırasıyla aşağıdaki komutları çalıştıralım.
+
+`argocd app list`
+`argocd app get helm-gitops-example`
+`argocd app history helm-gitops-example`
+
+Şimdi listelediğimiz bu application'ı silip yeniden CLI üzerinden deploy edelim.
+
+ilk olarak app'i silelim.
+
+`argocd app delete helm-gitops-example`
+
+Kısa bir sürede arayüzdeki application da kaybolacaktır.
+
+Şimdi tekrar deploy edelim:
+
+argocd app create demo \
+--project default \
+--repo https://github.com/aycakcayy/gitops-cert-level-2-examples \
+--path "./helm-app/" \
+--sync-policy auto \
+--dest-namespace default \
+--dest-server https://kubernetes.default.svc
+
+Arayüzde de yeniden bir application olduğunu teyit edebiliriz.
+
+`kubectl get all` diyerek applicationın oluştunu görelim.
+
 
