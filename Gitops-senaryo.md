@@ -315,7 +315,7 @@ Tebrikler, senaryoyu tamamladınız!
 
 ## Senaryo 5
 
-+ <b>Helm ile deployment</b>
++ <b>Helm ile Deployment</b>
 
 Bu senaryo sırasında Helm nedir, Helm ile Argocd üzerinde nasıl deployment gerçekleştirebiliriz bunlara değineceğiz.
 
@@ -351,15 +351,17 @@ Bu ve benzeri helm komutları için HELM senaryosunu detaylıca incelemeniz öne
 
 Argo CD'nin Helm için native destek sağladığından bahsettik, yani paketlenmiş bir Helm chart doğrudan Argo CD tarafından, yeni sürümler için izlenir. Bu gerçekleştiğinde ise Helmchart artık Helmchart olarak işlev görmez ve bunun yerine Argo CD applicationlar kullanılarak ilerler.
 
-Şimdi Argocd ortamı kurup, Helm ile bir uygulama deploy edelim!
-
-+ Senaryo 1 Tekrar
+Şimdi Argocd ortamında Helm ile bir uygulama deploy edelim!
 
 Bu senaryo için aşağıdaki repoda yer alan uygulamayı deploy edeceğiz. Sizlerde repoda yer alan application'ı fork ederek, veya direkt bu repo'yu kullanarak senaryoyu ilerletebilirsiniz.
 
 https://github.com/aycakcayy/gitops-certification-examples/tree/main/helm-app
 
-Kaynak repo'muz bu olacak şekilde bir application create edelim. Bunun için Argocd arayüzünde girilmesi gereken bilgiler aşağıdaki gibidir.
+Kaynak repo'yu incelediğinizde, helm template yapısını ve Values dosyasında yer alan Deployment'a ait değerleri görebilirsiniz. Örneğin bu uygulamayı deploy ettiğimzide pod üzerinde koşam image bilgimiz aşağıdaki gibidir:
+
+![image-name](./image-name.png)
+
+Kaynak repo'muz bu olacak şekilde bir application create edelim. Bunun için Argocd arayüzünde create app dedikten sonra girilmesi gereken bilgiler aşağıdaki gibidir.
 
 + application name : `helm-gitops-example`
 + project: `default`
@@ -379,7 +381,11 @@ Peki şimdi CLI'da aynı zamanda bir `Helm list` komutunu bastığımızda, bir 
 
 Az öncede bahsettiğimiz gibi, Argocd tarafından deploy edilen bir Helmchart artık direkt bir Helm deployment olarak karşımıza çıkmıyor. Bunun nedeni, ArgoCD'nin Helm payload bilgilerini içermemesidir. Bir Helm uygulamasını dağıtırken, Argo CD "helm template" çalıştırır ve ortaya çıkan bildirimleri dağıtır.
 
-Kullanışlı bi UI sunan ArgoCD için, birçok şey CLI üzerinden de kontrol edilebilir. Sırasıyla aşağıdaki komutları çalıştıralım.
+## Senaryo 6
+
++ Argocd CLI İşlemleri
+
+Kullanışlı bi UI sunan ArgoCD için, birçok şey CLI üzerinden de kontrol edilebilir. Az önce deploy ettiğimiz uygulama için sırasıyla aşağıdaki komutları çalıştıralım.
 
 `argocd app list`
 `argocd app get helm-gitops-example`
@@ -395,16 +401,20 @@ Kısa bir sürede arayüzdeki application da kaybolacaktır.
 
 Şimdi tekrar deploy edelim:
 
-argocd app create demo \
+`argocd app create demo \
 --project default \
 --repo https://github.com/aycakcayy/gitops-cert-level-2-examples \
 --path "./helm-app/" \
 --sync-policy auto \
 --dest-namespace default \
---dest-server https://kubernetes.default.svc
+--dest-server https://kubernetes.default.svc`
 
 Arayüzde de yeniden bir application olduğunu teyit edebiliriz.
 
 `kubectl get all` diyerek applicationın oluştunu görelim.
 
+User-friendly bir arayüzü olduğu için Argocd'yi genelde arayüzden yöneterek ilerlesek de, CLI'da da birçok işlemi yapabiliyoruz. Hatta bazı işlemleri sadece CLI üzerinden yapmak durumunda bile kalabiliyoruz. Bu sebeple bu pratikleri kazanmakta gerekli.
 
+ArgoCD CLI ile işlemleri de bu şekilde tamamlamış olduk. 
+
+Tebrikler!
