@@ -381,6 +381,8 @@ Peki şimdi CLI'da aynı zamanda bir `Helm list` komutunu bastığımızda, bir 
 
 Az öncede bahsettiğimiz gibi, Argocd tarafından deploy edilen bir Helmchart artık direkt bir Helm deployment olarak karşımıza çıkmıyor. Bunun nedeni, ArgoCD'nin Helm payload bilgilerini içermemesidir. Bir Helm uygulamasını dağıtırken, Argo CD "helm template" çalıştırır ve ortaya çıkan bildirimleri dağıtır.
 
+Senaryoyu tamamladınız, tebrikler!
+
 ## Senaryo 6
 
 + Argocd CLI İşlemleri
