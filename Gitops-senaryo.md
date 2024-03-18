@@ -339,7 +339,7 @@ Sık kullanınan helm komutları şu şekildedir:
 
 Chart kurulumu, uygulamanın Kubernetes dağıtımını ve objelerin oluşturulmasını gerçekleştirir. Chart, esasen bir dizi Kubernetes kaynağını açıklamak için kullanılan bir dosya koleksiyonudur ve bu kaynakların oluşturulmasını Helm yönetir.
 
-+ To confirm the deployment and view the currently deployed release:
++ Halihazırda dağıtılan sürümü görüntülemek için:
 
 `helm list` ya da `helm ls`
 
@@ -347,7 +347,7 @@ Chart kurulumu, uygulamanın Kubernetes dağıtımını ve objelerin oluşturulm
 
 `helm upgrade release_name chart_name`
 
-Bu ve benzeri helm komutları için HELM senaryosunu detaylıca incelemeniz önerilir.
+Bu ve benzeri helm komutları için HELM senaryosunu detaylıca incelemeniz ve deneyimlemeniz önerilir.
 
 Argo CD'nin Helm için native destek sağladığından bahsettik, yani paketlenmiş bir Helm chart doğrudan Argo CD tarafından, yeni sürümler için izlenir. Bu gerçekleştiğinde ise Helmchart artık Helmchart olarak işlev görmez ve bunun yerine Argo CD applicationlar kullanılarak ilerler.
 
@@ -383,11 +383,41 @@ Az öncede bahsettiğimiz gibi, Argocd tarafından deploy edilen bir Helmchart a
 
 Senaryoyu tamamladınız, tebrikler!
 
+`curl -sSL -o /usr/local/bin/argocd https://github.com/argoproj/argo-cd/releases/latest/download/argocd-linux-amd64`
+
+chmod +x /usr/local/bin/argocd
+
+
+
 ## Senaryo 6
+
++ Argocd CLI Kurulumu
+
+Şimdiye kadar Argocd arayüzü üzerinde; uygulama deploy etme, sync etme, silme vb. birçok işlem gerçekleştirdik. Argocd arayüzü oldukça user-friendly ve kullanışlı. Fakat tüm bu işlemleri ve hatta fazlasını Argocd CLI aracılığı ile de yapabiliriz. Hadi gelin bu senaryoda Argocd CLI kuralım!
+
+`curl -sSL -o /usr/local/bin/argocd  https://github.com/argoproj/argo-cd/releases/download/v2.2.10/argocd-linux-amd64` ile CLI paketini çekelim.
+
+Exacutable hale getirelim.
+
+`chmod +x /usr/local/bin/argocd`
+
+`export HOME=/root/workspace` 
+
+Argocd'nin bağlanacağı sunucu adresi /etc/rancher/k3s/k3s.yaml içerisinde sertifika bilgileri de mevcut. Zaten lokal bir dosyada bağlantı bilgileri localhostta çalıştığımız için var. `--core` ekleyip argocd default kullanıcıyla argocdye bağlandıracağız.
+
+`argocd login --core`
+
+Argocd cli'i yalnızca "argocd" namespace seçiliyken api ile konuşabilmektedir. O yüzden hali hazırdaki namespace'imizi "argocd" yapıyoruz. "oc project argocd" ile eşdeğer.
+
+`kubectl config set-context --current --namespace=argocd`
+
+Artık CLI'da komutları çalıştırmaya hazırız. Bir sonraki senaryoda bu komutları koşacağız. 
+
+## Senaryo 7
 
 + Argocd CLI İşlemleri
 
-Kullanışlı bi UI sunan ArgoCD için, birçok şey CLI üzerinden de kontrol edilebilir. Az önce deploy ettiğimiz uygulama için sırasıyla aşağıdaki komutları çalıştıralım.
+Kullanışlı bi UI sunan ArgoCD için, birçok şey CLI üzerinden de kontrol edilebilir demiştik. Şimdi de Helm aracılığı ile deploy ettiğimiz uygulamamzız için sırasıyla aşağıdaki komutları çalıştıralım.
 
 `argocd app list`
 `argocd app get helm-gitops-example`
@@ -420,3 +450,4 @@ User-friendly bir arayüzü olduğu için Argocd'yi genelde arayüzden yönetere
 ArgoCD CLI ile işlemleri de bu şekilde tamamlamış olduk. 
 
 Tebrikler!
+
