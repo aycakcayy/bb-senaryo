@@ -343,7 +343,7 @@ Chart kurulumu, uygulamanın Kubernetes dağıtımını ve objelerin oluşturulm
 
 `helm list` ya da `helm ls`
 
-+ Upgarde etmek için:
++ Upgrade etmek için:
 
 `helm upgrade release_name chart_name`
 
@@ -382,12 +382,6 @@ Peki şimdi CLI'da aynı zamanda bir `Helm list` komutunu bastığımızda, bir 
 Az öncede bahsettiğimiz gibi, Argocd tarafından deploy edilen bir Helmchart artık direkt bir Helm deployment olarak karşımıza çıkmıyor. Bunun nedeni, ArgoCD'nin Helm payload bilgilerini içermemesidir. Bir Helm uygulamasını dağıtırken, Argo CD "helm template" çalıştırır ve ortaya çıkan bildirimleri dağıtır.
 
 Senaryoyu tamamladınız, tebrikler!
-
-`curl -sSL -o /usr/local/bin/argocd https://github.com/argoproj/argo-cd/releases/latest/download/argocd-linux-amd64`
-
-chmod +x /usr/local/bin/argocd
-
-
 
 ## Senaryo 6
 
@@ -445,7 +439,7 @@ Arayüzde de yeniden bir application olduğunu teyit edebiliriz.
 
 `kubectl get all` diyerek applicationın oluştunu görelim.
 
-User-friendly bir arayüzü olduğu için Argocd'yi genelde arayüzden yöneterek ilerlesek de, CLI'da da birçok işlemi yapabiliyoruz. Hatta bazı işlemleri sadece CLI üzerinden yapmak durumunda bile kalabiliyoruz. Bu sebeple bu pratikleri kazanmakta gerekli.
+User-friendly bir arayüzü olduğu için Argocd'yi genelde arayüzden yöneterek ilerlesek de, CLI'da da birçok işlemi yapabiliyoruz. Hatta bazı işlemleri sadece CLI üzerinden yapmak durumunda bile kalabiliyoruz. Bu sebeple bu pratikleri kazanmak da oldukça gerekli.
 
 ArgoCD CLI ile işlemleri de bu şekilde tamamlamış olduk. 
 
